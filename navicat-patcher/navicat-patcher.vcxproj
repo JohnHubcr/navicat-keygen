@@ -75,28 +75,28 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)openssl-lib\include;$(SolutionDir)capstone-lib-win32\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)openssl-lib\lib;$(SolutionDir)capstone-lib-win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)libraries\openssl\include;$(SolutionDir)libraries\capstone-win32\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)libraries\openssl\lib;$(SolutionDir)libraries\capstone-win32;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)openssl-lib\include64;$(SolutionDir)capstone-lib-win64\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)openssl-lib\lib64;$(SolutionDir)capstone-lib-win64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)libraries\openssl\include64;$(SolutionDir)libraries\capstone-win64\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)libraries\openssl\lib64;$(SolutionDir)libraries\capstone-win64;$(LibraryPath)</LibraryPath>
     <ReferencePath>$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)openssl-lib\include;$(SolutionDir)capstone-lib-win32\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)openssl-lib\lib;$(SolutionDir)capstone-lib-win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)libraries\openssl\include;$(SolutionDir)libraries\capstone-win32\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)libraries\openssl\lib;$(SolutionDir)libraries\capstone-win32;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)openssl-lib\include64;$(SolutionDir)capstone-lib-win64\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)openssl-lib\lib64;$(SolutionDir)capstone-lib-win64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)libraries\openssl\include64;$(SolutionDir)libraries\capstone-win64\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)libraries\openssl\lib64;$(SolutionDir)libraries\capstone-win64;$(LibraryPath)</LibraryPath>
     <ReferencePath>$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

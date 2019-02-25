@@ -71,27 +71,27 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)rapidjson-lib\include;$(SolutionDir)openssl-lib\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)openssl-lib\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)libraries\rapidjson\include;$(SolutionDir)libraries\openssl\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)libraries\openssl\lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)rapidjson-lib\include;$(SolutionDir)openssl-lib\include64;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)openssl-lib\lib64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)libraries\rapidjson\include;$(SolutionDir)libraries\openssl\include64;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)libraries\openssl\lib64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)rapidjson-lib\include;$(SolutionDir)openssl-lib\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)openssl-lib\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)libraries\rapidjson\include;$(SolutionDir)libraries\openssl\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)libraries\openssl\lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)rapidjson-lib\include;$(SolutionDir)openssl-lib\include64;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)openssl-lib\lib64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)libraries\rapidjson\include;$(SolutionDir)libraries\openssl\include64;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)libraries\openssl\lib64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
