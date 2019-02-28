@@ -41,17 +41,17 @@ namespace Helper {
                 uintptr_t d = start >= base ? start - base_ptr : base_ptr - start;
                 if (start >= base) {
                     if constexpr (sizeof(void*) == 4) {
-                        _tprintf(TEXT("+0x%.8llx  "), d);
+                        _tprintf(TEXT("+0x%.8zx  "), d);
                     }
                     if constexpr (sizeof(void*) == 8) {
-                        _tprintf(TEXT("+0x%.16llx  "), d);
+                        _tprintf(TEXT("+0x%.16zx  "), d);
                     }
                 } else {
                     if constexpr (sizeof(void*) == 4) {
-                        _tprintf(TEXT("-0x%.8llx  "), d);
+                        _tprintf(TEXT("-0x%.8zx  "), d);
                     }
                     if constexpr (sizeof(void*) == 8) {
-                        _tprintf(TEXT("-0x%.16llx  "), d);
+                        _tprintf(TEXT("-0x%.16zx  "), d);
                     }
                 }
             } else {
