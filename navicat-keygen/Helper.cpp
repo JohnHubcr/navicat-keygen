@@ -1,135 +1,98 @@
-#include <vector>
-#include <string>
-#include <windows.h>
+#include "Helper.hpp"
+#include "ExceptionSystem.hpp"
+#include <iostream>
+
+#undef __BASE_FILE__
+#define __BASE_FILE__ TEXT("Helper.cpp")
 
 namespace Helper {
 
-    bool ConvertToUTF8(LPCSTR from, std::string& to) {
-        bool bSuccess = false;
-        int len = 0;
-        LPWSTR lpUnicodeString = nullptr;
-
-        len = MultiByteToWideChar(CP_ACP, NULL, from, -1, NULL, 0);
-        if (len == 0)
-            goto ON_ConvertToUTF8_0_ERROR;
-
-        lpUnicodeString = reinterpret_cast<LPWSTR>(HeapAlloc(GetProcessHeap(),
-                                                             HEAP_ZERO_MEMORY,
-                                                             len * sizeof(WCHAR)));
-        if (lpUnicodeString == nullptr)
-            goto ON_ConvertToUTF8_0_ERROR;
-
-        if (!MultiByteToWideChar(CP_ACP, NULL, from, -1, lpUnicodeString, len))
-            goto ON_ConvertToUTF8_0_ERROR;
-
-        len = WideCharToMultiByte(CP_UTF8, NULL, lpUnicodeString, -1, NULL, 0, NULL, NULL);
-        if (len == 0)
-            goto ON_ConvertToUTF8_0_ERROR;
-
-        to.resize(len);
-        if (!WideCharToMultiByte(CP_UTF8, NULL, lpUnicodeString, -1, to.data(), len, NULL, NULL))
-            goto ON_ConvertToUTF8_0_ERROR;
-
-        while (to.back() == 0)
-            to.pop_back();
-
-        bSuccess = true;
-
-    ON_ConvertToUTF8_0_ERROR:
-        if (lpUnicodeString)
-            HeapFree(GetProcessHeap(), NULL, lpUnicodeString);
-        return bSuccess;
-    }
-
-    bool ConvertToUTF8(LPCWSTR from, std::string& to) {
-        bool bSuccess = false;
-        int len = 0;
-
-        len = WideCharToMultiByte(CP_UTF8, NULL, from, -1, NULL, 0, NULL, NULL);
-        if (len == 0)
-            goto ON_ConvertToUTF8_1_ERROR;
-
-        to.resize(len);
-        if (!WideCharToMultiByte(CP_UTF8, NULL, from, -1, to.data(), len, NULL, NULL))
-            goto ON_ConvertToUTF8_1_ERROR;
-
-        while (to.back() == 0)
-            to.pop_back();
-
-        bSuccess = true;
-
-    ON_ConvertToUTF8_1_ERROR:
-        return bSuccess;
-    }
-
-    bool ConvertToUTF8(std::string& str) {
-        bool bSuccess = false;
-
-        std::string temp;
-        bSuccess = ConvertToUTF8(str.c_str(), temp);
-        if (!bSuccess)
-            return false;
-
-        str = temp;
-        return true;
-    }
-
-    std::string Base64Encode(const std::vector<uint8_t>& bytes) {
-        std::string Result;
+    TString Base64Encode(const std::vector<uint8_t>& bytes) {
+        TString RetValue;
         DWORD pcchString = 0;
 
         if (bytes.empty())
-            return Result;
+            return RetValue;
 
-        CryptBinaryToStringA(bytes.data(),
-                             bytes.size(),
-                             CRYPT_STRING_BASE64,
-                             NULL,
-                             &pcchString);
-        if (pcchString == 0)
-            return Result;
+        if (!CryptBinaryToString(bytes.data(),
+                                 static_cast<DWORD>(bytes.size()),
+                                 CRYPT_STRING_BASE64 | CRYPT_STRING_NOCRLF,
+                                 NULL,
+                                 &pcchString))
+            throw SystemException(__BASE_FILE__, __LINE__, GetLastError(),
+                                  TEXT("CryptBinaryToString failed."));
 
-        Result.resize(pcchString + 1);
+        RetValue.resize(pcchString);
 
-        if (!CryptBinaryToStringA(bytes.data(),
-                                  bytes.size(),
-                                  CRYPT_STRING_BASE64,
-                                  Result.data(),
-                                  &pcchString))
-            Result.clear();
+        if (!CryptBinaryToString(bytes.data(),
+                                 static_cast<DWORD>(bytes.size()),
+                                 CRYPT_STRING_BASE64 | CRYPT_STRING_NOCRLF,
+                                 RetValue.data(),
+                                 &pcchString))
+            throw SystemException(__BASE_FILE__, __LINE__, GetLastError(),
+                                  TEXT("CryptBinaryToString failed."));
 
-        return Result;
+        while (RetValue.back() == TEXT('\x00'))
+            RetValue.pop_back();
+
+        return RetValue;
     }
 
-    std::vector<uint8_t> Base64Decode(std::string& str) {
-        std::vector<uint8_t> Result;
+    std::vector<uint8_t> Base64Decode(const TString& Base64Str) {
+        std::vector<uint8_t> RetValue;
         DWORD pcbBinary = 0;
 
-        if (str.empty())
-            return Result;
+        if (Base64Str.empty())
+            return RetValue;
 
-        CryptStringToBinaryA(str.c_str(),
-                             NULL,
-                             CRYPT_STRING_BASE64,
-                             NULL,
-                             &pcbBinary,
-                             NULL,
-                             NULL);
-        if (pcbBinary == 0)
-            return Result;
+        if (!CryptStringToBinary(Base64Str.c_str(),
+                                 NULL,
+                                 CRYPT_STRING_BASE64,
+                                 NULL,
+                                 &pcbBinary,
+                                 NULL,
+                                 NULL))
+            throw SystemException(__BASE_FILE__, __LINE__, GetLastError(),
+                                  TEXT("CryptStringToBinary failed."),
+                                  TEXT("Are you sure it is a Base64 string?"));
 
-        Result.resize(pcbBinary);
+        RetValue.resize(pcbBinary);
 
-        if (!CryptStringToBinaryA(str.c_str(),
-                                  NULL,
-                                  CRYPT_STRING_BASE64,
-                                  Result.data(),
-                                  &pcbBinary,
-                                  NULL,
-                                  NULL))
-            Result.clear();
+        if (!CryptStringToBinary(Base64Str.c_str(),
+                                 NULL,
+                                 CRYPT_STRING_BASE64,
+                                 RetValue.data(),
+                                 &pcbBinary,
+                                 NULL,
+                                 NULL))
+            throw SystemException(__BASE_FILE__, __LINE__, GetLastError(),
+                                  TEXT("CryptStringToBinary failed."));
 
-        return Result;
+        return RetValue;
     }
-    
+
+    bool ReadInt(int& RefInt, int MinVal, int MaxVal, PCTSTR Prompt, PCTSTR ErrMsg) {
+        int t;
+        TString s;
+        while (true) {
+            _tprintf_s(TEXT("%s"), Prompt);
+            if (!std::getline(std::_tcin, s))
+                return false;
+
+            if (s.empty())
+                continue;
+
+            try {
+                t = std::stoi(s, nullptr, 0);
+                if (MinVal <= t && t <= MaxVal) {
+                    RefInt = t;
+                    return true;
+                } else {
+                    throw std::invalid_argument("");
+                }
+            } catch (...) {
+                _putts(ErrMsg);
+            }
+        }
+    }
 }

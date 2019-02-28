@@ -1,24 +1,10 @@
 #pragma once
-#include <windows.h>
-#include <string>
 #include <sys/types.h>
 #include "NavicatCrypto.hpp"
-
-#undef __BASE_FILE__
-#define __BASE_FILE__ "Helper.hpp"
 
 namespace Helper {
 
     extern Navicat11Crypto NavicatCipher;
-
-    //
-    //  Print memory data in [from, to) at least
-    //  If `base` is not nullptr, print address as offset. Otherwise, as absolute address.
-    //  NOTICE:
-    //      `base` must <= `from`
-    //  
-    void PrintMemory(const void* from, const void* to, const void* base = nullptr);
-    void PrintSomeBytes(const void* p, size_t s);
 
     template<typename _Type, bool _Ascending = true>
     void QuickSort(_Type* pArray, off_t begin, off_t end) {
@@ -62,13 +48,34 @@ namespace Helper {
         QuickSort<_Type, _Ascending>(pArray, i + 1, end);
     }
 
-    std::string ConvertToUTF8(PCSTR From, DWORD CodePage = CP_ACP);
-    std::string ConvertToUTF8(PCWSTR From);
-
+    //
+    //  Print memory data in [from, to) at least
+    //  If `base` is not nullptr, print address as offset. Otherwise, as absolute address.
+    //  NOTICE:
+    //      `base` must <= `from`
+    //  
+    void PrintMemory(const void* from, const void* to, const void* base = nullptr);
+    void PrintBytes(const void* p, size_t s);
     bool IsPrintable(const uint8_t* p, size_t s);
 
-    void ReplaceSubString(std::string& Str,
-                          const std::string& OldSubStr,
-                          const std::string& NewSubStr);
+    template<typename __string_t>
+    void StringReplace(__string_t& Str, const __string_t& OldSubStr, const __string_t& NewSubStr) {
+        typename __string_t::size_type pos = 0;
+        auto srclen = OldSubStr.size();
+        auto dstlen = NewSubStr.size();
+
+        while ((pos = Str.find(OldSubStr, pos)) != __string_t::npos) {
+            Str.replace(pos, srclen, NewSubStr);
+            pos += dstlen;
+        }
+    }
+
+    template<typename __string_t>
+    void StringRemove(__string_t& Str, const __string_t& SubStr) {
+        typename __string_t::size_type pos = 0;
+        while ((pos = Str.find(SubStr, pos)) != __string_t::npos) {
+            Str.erase(pos, SubStr.length());
+        }
+    }
 }
 

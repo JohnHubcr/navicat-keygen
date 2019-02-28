@@ -1,13 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "navicat-keygen", "navicat-keygen\navicat-keygen.vcxproj", "{CB49F054-83AB-4C16-B73B-33D7DF696E16}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "navicat-patcher", "navicat-patcher\navicat-patcher.vcxproj", "{30BE8CAB-6137-4441-9F64-599D0A6EEA0C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "common", "common\common.vcxitems", "{6AA392E2-B540-4AB5-9BFD-40AD964B209A}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		common\common.vcxitems*{30be8cab-6137-4441-9f64-599d0a6eea0c}*SharedItemsImports = 4
+		common\common.vcxitems*{6aa392e2-b540-4ab5-9bfd-40ad964b209a}*SharedItemsImports = 9
+		common\common.vcxitems*{cb49f054-83ab-4c16-b73b-33d7df696e16}*SharedItemsImports = 4
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
@@ -34,5 +41,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8C8CB6CD-8F5F-4847-9EF4-095745EEFBDB}
 	EndGlobalSection
 EndGlobal

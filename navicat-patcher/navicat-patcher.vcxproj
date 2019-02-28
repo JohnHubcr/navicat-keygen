@@ -59,6 +59,7 @@
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="Shared">
+    <Import Project="..\common\common.vcxitems" Label="Shared" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -101,8 +102,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -122,8 +122,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -144,8 +143,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -170,8 +168,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -194,7 +191,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CapstoneDisassembler.cpp" />
     <ClCompile Include="Helper.cpp" />
+    <ClCompile Include="ImageInterpreter.cpp" />
     <ClCompile Include="PatchSolution0.cpp" />
     <ClCompile Include="PatchSolution1.cpp" />
     <ClCompile Include="PatchSolution2.cpp" />
@@ -202,20 +201,13 @@
     <ClCompile Include="PatchSolution3.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CapstoneDisassembler.hpp" />
     <ClInclude Include="ExceptionCapstone.hpp" />
-    <ClInclude Include="ExceptionOpenssl.hpp" />
-    <ClInclude Include="Exception.hpp" />
-    <ClInclude Include="ExceptionSystem.hpp" />
-    <ClInclude Include="FileMapper.hpp" />
+    <ClInclude Include="FileManipulation.hpp" />
     <ClInclude Include="Helper.hpp" />
     <ClInclude Include="ImageInterpreter.hpp" />
     <ClInclude Include="NavicatCrypto.hpp" />
     <ClInclude Include="PatchSolution.hpp" />
-    <ClInclude Include="ResourceGuard.hpp" />
-    <ClInclude Include="ResourceGuardCapstone.hpp" />
-    <ClInclude Include="ResourceGuardOpenssl.hpp" />
-    <ClInclude Include="ResourceGuardWin32.hpp" />
-    <ClInclude Include="RSACipher.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

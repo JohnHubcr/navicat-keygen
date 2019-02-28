@@ -18,18 +18,24 @@
     <ClCompile Include="Helper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Process.cpp">
+    <ClCompile Include="_tmain.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="ModeAdvance.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ModeNormal.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="NavicatKeygen.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="RSACipher.hpp">
+    <ClInclude Include="NavicatKeygen.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="NavicatKeygen.hpp">
+    <ClInclude Include="Helper.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
