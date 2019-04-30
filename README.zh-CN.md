@@ -10,3 +10,11 @@
 
 针对 Linux 用户，请见[这里](README_FOR_LINUX.zh-CN.md)。
 
+## 贡献者
+
+* Deltafox79
+
+* dragonflylee
+
+* zenuo
+

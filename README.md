@@ -12,3 +12,11 @@ For Windows users, see [here](README_FOR_WINDOWS.md).
 
 For Linux users, see [here](README_FOR_LINUX.md).
 
+## Contributor
+
+* Deltafox79
+
+* dragonflylee
+
+* zenuo
+
