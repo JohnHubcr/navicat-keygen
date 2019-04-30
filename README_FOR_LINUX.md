@@ -1,36 +1,55 @@
-# Navicat Keygen
+# Navicat Keygen - for Linux
 
-这份repo将会告诉你Navicat是怎么完成离线激活的。
+[中文版README](README_FOR_LINUX.zh-CN.md)
 
-[注册机是怎么工作的?](HOW_DOES_IT_WORK.zh-CN.md)
+This repository will tell you how Navicat offline activation works.
 
-## 如何使用这个注册机
+[How does it work?](HOW_DOES_IT_WORK.md)
 
-__针对Linux用户，请见[这里](README_FOR_LINUX.zh-CN.md)__
+## How to use?
 
-1. [从这里](https://github.com/DoubleLabyrinth/navicat-keygen/releases)下载最新的release。
+> For easier offline activation, we are going to install Navicat to `home`; you can download [Screen recoding](image/Screen_recording.mp4) for references.
 
-2. 使用`navicat-patcher.exe`替换掉`navicat.exe`和`libcc.dll`里的Navicat激活公钥。 
+1. Run Navicat, for initialization:
 
-   ```
-   navicat-patcher.exe <Navicat installation path> [RSA-2048 PEM file]
-   ```
+    ```bash
+    cd ~/navicat121_premium_en_x64 && \
+    ./start_navicat
+    ```
 
-   * `<Navicat installation path>`: Navicat的完整安装路径。 
-     
-     __这个参数必须指定。__
+    When running for the first time, you will be prompted with the following two windows, click "Cancel" to:
 
-   * `[RSA-2048 PEM file]`: RSA-2048私钥文件的完整路径或相对路径。
-     
-     __这个参数是可选的。__ 如果未指定，`navicat-patcher.exe`将会在当前目录生成一个新的RSA-2048私钥文件。
+    ![](image/Screenshot_2019-04-30_12-31-33.png)
 
-   __例如：(在cmd.exe中)__ 
+    ![](image/Screenshot_2019-04-30_12-31-52.png)
 
-   ```
-   navicat-patcher.exe "C:\Program Files\PremiumSoft\Navicat Premium 12"
+    Until the `Registration` window appears, select `Trial`, close Navicat after loading is complete, and execute `Step 2`:
+
+    ![](image/Screenshot_2019-04-30_12-32-43.png)
+
+2. Download the latest release [from here](https://github.com/DoubleLabyrinth/navicat-keygen/releases), and extract ：
+
+    ```bash
+    curl -O -L https://github.com/DoubleLabyrinth/navicat-keygen/releases/download/v3.1/navicat-keygen-for-x64.zip && \
+    unzip navicat-keygen-for-x64.zip
+    ```
+
+3. Download `navicat-pacther.sh` and `navicat-keygen.sh`:
+
+    ```bash
+    curl -O -L https://raw.githubusercontent.com/zenuo/navicat-keygen/linux/bash/navicat-patcher.sh && \
+    chmod +x navicat-patcher.sh && \
+    curl -O -L https://raw.githubusercontent.com/zenuo/navicat-keygen/linux/bash/navicat-keygen.sh && \
+    chmod +x navicat-keygen.sh
+    ```
+
+4. Use `navicat-patcher.exe` to replace __Navicat Activation Public Key__ that is stored in `navicat.exe` or `libcc.dll`.
+   
+   ```bash
+   ./navicat-patcher.sh
    ```
    
-   __Navicat Premium 12.1.12 简体中文版已通过测试__。下面将是一份样例输出。
+   It has been tested on __Navicat Premium 12.1.12 Simplified Chinese version__. The following is an example of output.
 
    ```
    ***************************************************
@@ -117,35 +136,13 @@ __针对Linux用户，请见[这里](README_FOR_LINUX.zh-CN.md)__
    MESSAGE: Patch has been done successfully.
    ```
 
-3. 接下来使用`navicat-keygen.exe`来生成序列号和激活码
+5. Then use `navicat-keygen.exe` to generate __snKey__ and __Activation Code__
 
    ```
-   navicat-keygen.exe <-bin|-text> [-adv] <RSA-2048 PrivateKey(PEM file)>
+   ./navicat-keygen.sh
    ```
 
-   * `<-bin|-text>`: 必须是`-bin`或`-text`。
-
-     如果指定了`-bin`，`navicat-keygen.exe`最终将生成`license_file`文件。这个选项是给Navicat旧激活方式使用的。
-
-     如果指定了`-text`，`navicat-keygen.exe`最终将生成Base64样式的激活码。这个选项是给Navicat新激活方式使用的。
-
-     __这个参数必须指定。__
-
-   * `[-adv]`: 开启高级模式。
-
-     __这个参数是可选的。__ 如果指定了这个参数，`navicat-keygen.exe`将会要求你手工填写产品ID号、语言标识号。这个选项一般是给以后用的。
-
-   * `<RSA-2048 PrivateKey(PEM file)>`: RSA-2048私钥文件的完整路径或相对路径。
-     
-     __这个参数必须指定。__
-
-   __例如：(在cmd.exe中)__ 
-
-   ```bash
-   navicat-keygen.exe -text .\RegPrivateKey.pem
-   ```
-
-   你会被要求选择Navicat产品类别、语言以及输入主版本号。之后会随机生成一个序列号。
+   You will be asked to select Navicat product, language and input major version number. After that an randomly generated __snKey__ will be given.
 
    ```
    Select Navicat product:
@@ -185,25 +182,25 @@ __针对Linux用户，请见[这里](README_FOR_LINUX.zh-CN.md)__
    Your name: 
    ```
 
-   你可以使用这个序列号暂时激活Navicat。
-
-   接下来你会被要求输入`用户名`和`组织名`；请随便填写，但不要太长。
+   You can use this __snKey__ to activate your Navicat preliminarily.
+     
+   Then you will be asked to input `Your name` and `Your organization`. Just set them whatever you want, but not too long.
 
    ```
    Your name: DoubleLabyrinth
    Your organization: DoubleLabyrinth
    Input request code (in Base64), input empty line to end:
    ```
- 
-   之后你会被要求填入请求码。注意 __不要关闭命令行__.
+     
+   After that, you will be asked to input the request code. Now __DO NOT CLOSE KEYGEN__.
 
-4. __断开网络__ 并打开Navicat。找到`注册`窗口，并填入keygen给你的序列号。然后点击`激活`按钮。
+6. __Set up__ a invalid proxy. Find and click `Registration`. Fill `Registration Key` by __snKey__ that the keygen gave and click `Activate`.
 
-5. 一般来说在线激活肯定会失败，这时候Navicat会询问你是否`手动激活`，直接选吧。
+7. Online activation will failed and Navicat will ask you do `Manual Activation`, just choose it.
 
-6. 在`手动激活`窗口你会得到一个请求码，复制它并把它粘贴到keygen里。最后别忘了连按至少两下回车结束输入。
+8. Copy your request code and paste it in the keygen. Input empty line to tell the keygen that your input ends.
 
-   ```bash
+   ```
    Your name: DoubleLabyrinth
    Your organization: DoubleLabyrinth
 
@@ -225,5 +222,5 @@ __针对Linux用户，请见[这里](README_FOR_LINUX.zh-CN.md)__
    UI8dzqFzRp/hSDEM0mEqiA==
    ```
 
-  4. 如果不出意外，你会得到一个看似用Base64编码的激活码。直接复制它，并把它粘贴到Navicat的`手动激活`窗口，最后点`激活`按钮。如果没什么意外的话应该能成功激活。
+7. Finally, you will get __Activation Code__ which looks like a Base64 string. Just copy it and paste it in Navicat `Manual Activation` window, then click `Activate`. If nothing wrong, activation should be done successfully. Don't forget to close the proxy that we just set up.
 
