@@ -8,26 +8,45 @@ This repository will tell you how Navicat offline activation works.
 
 ## How to use?
 
-1. Download the latest release [from here](https://github.com/DoubleLabyrinth/navicat-keygen/releases).
+> For easier offline activation, we are going to install Navicat to `home`; you can download [Screen recoding](image/Screen_recording.mp4) for references.
 
-2. Use `navicat-patcher.exe` to replace __Navicat Activation Public Key__ that is stored in `navicat.exe` or `libcc.dll`.
+1. Run Navicat, for initialization:
+
+    ```bash
+    cd ~/navicat121_premium_en_x64 && \
+    ./start_navicat
+    ```
+
+    When running for the first time, you will be prompted with the following two windows, click "Cancel" to:
+
+    ![](image/Screenshot_2019-04-30_12-31-33.png)
+
+    ![](image/Screenshot_2019-04-30_12-31-52.png)
+
+    Until the `Registration` window appears, select `Trial`, close Navicat after loading is complete, and execute `Step 2`:
+
+    ![](image/Screenshot_2019-04-30_12-32-43.png)
+
+2. Download the latest release [from here](https://github.com/DoubleLabyrinth/navicat-keygen/releases), and extract ：
+
+    ```bash
+    curl -O -L https://github.com/DoubleLabyrinth/navicat-keygen/releases/download/v3.1/navicat-keygen-for-x64.zip && \
+    unzip navicat-keygen-for-x64.zip
+    ```
+
+3. Download `navicat-pacther.sh` and `navicat-keygen.sh`:
+
+    ```bash
+    curl -O -L https://raw.githubusercontent.com/zenuo/navicat-keygen/linux/bash/navicat-patcher.sh && \
+    chmod +x navicat-patcher.sh && \
+    curl -O -L https://raw.githubusercontent.com/zenuo/navicat-keygen/linux/bash/navicat-keygen.sh && \
+    chmod +x navicat-keygen.sh
+    ```
+
+4. Use `navicat-patcher.exe` to replace __Navicat Activation Public Key__ that is stored in `navicat.exe` or `libcc.dll`.
    
-   ```
-   navicat-patcher.exe <Navicat installation path> [RSA-2048 PEM file]
-   ```
-
-   * `<Navicat installation path>`: The full path to Navicat installation folder. 
-     
-     __This parameter must be specified.__
-
-   * `[RSA-2048 PEM file]`: The full path or relative path to a RSA-2048 private key file. 
-     
-     __This parameter is optional.__ If not specified, `navicat-patcher.exe` will generate a new RSA-2048 private key file `RegPrivateKey.pem` at current directory.
-
-   __Example: (in cmd.exe)__ 
-
-   ```
-   navicat-patcher.exe "C:\Program Files\PremiumSoft\Navicat Premium 12"
+   ```bash
+   ./navicat-patcher.sh
    ```
    
    It has been tested on __Navicat Premium 12.1.12 Simplified Chinese version__. The following is an example of output.
@@ -117,32 +136,10 @@ This repository will tell you how Navicat offline activation works.
    MESSAGE: Patch has been done successfully.
    ```
 
-3. Then use `navicat-keygen.exe` to generate __snKey__ and __Activation Code__
+5. Then use `navicat-keygen.exe` to generate __snKey__ and __Activation Code__
 
    ```
-   navicat-keygen.exe <-bin|-text> [-adv] <RSA-2048 PrivateKey(PEM file)>
-   ```
-
-   * `<-bin|-text>`: Must be `-bin` or `-text`. 
-  
-     If `-bin` is specified, `navicat-keygen.exe` will finally generate `license_file`. It is used for Navicat old activation method only.
-
-     If `-text` is specified, `navicat-keygen.exe` will finally generate a Base64-style string which is __Activation Code__. It is used for Navicat new activation method. 
-
-     __This parameter must be specified.__
-
-   * `[-adv]`: Enable advanced mode.
-
-     __This parameter is optional.__ If specified, `navicat-keygen.exe` will ask you input Navicat product ID number, language signature numbers. It is for future use generally.
-
-   * `<RSA-2048 PrivateKey(PEM file)>`: The full path or relative path to a RSA-2048 private key file. 
-     
-     __This parameter must be specified.__
-
-   __Example: (in cmd.exe)__
-
-   ```bash
-   navicat-keygen.exe -text .\RegPrivateKey.pem
+   ./navicat-keygen.sh
    ```
 
    You will be asked to select Navicat product, language and input major version number. After that an randomly generated __snKey__ will be given.
@@ -197,11 +194,11 @@ This repository will tell you how Navicat offline activation works.
      
    After that, you will be asked to input the request code. Now __DO NOT CLOSE KEYGEN__.
 
-4. __Disconnect your network__ and open Navicat. Find and click `Registration`. Fill `Registration Key` by __snKey__ that the keygen gave and click `Activate`.
+6. __Set up__ a invalid proxy. Find and click `Registration`. Fill `Registration Key` by __snKey__ that the keygen gave and click `Activate`.
 
-5. Generally online activation will failed and Navicat will ask you do `Manual Activation`, just choose it.
+7. Online activation will failed and Navicat will ask you do `Manual Activation`, just choose it.
 
-6. Copy your request code and paste it in the keygen. Input empty line to tell the keygen that your input ends.
+8. Copy your request code and paste it in the keygen. Input empty line to tell the keygen that your input ends.
 
    ```
    Your name: DoubleLabyrinth
@@ -225,5 +222,5 @@ This repository will tell you how Navicat offline activation works.
    UI8dzqFzRp/hSDEM0mEqiA==
    ```
 
-7. Finally, you will get __Activation Code__ which looks like a Base64 string. Just copy it and paste it in Navicat `Manual Activation` window, then click `Activate`. If nothing wrong, activation should be done successfully.
+7. Finally, you will get __Activation Code__ which looks like a Base64 string. Just copy it and paste it in Navicat `Manual Activation` window, then click `Activate`. If nothing wrong, activation should be done successfully. Don't forget to close the proxy that we just set up.
 

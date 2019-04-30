@@ -6,26 +6,45 @@
 
 ## 如何使用这个注册机
 
-1. [从这里](https://github.com/DoubleLabyrinth/navicat-keygen/releases)下载最新的release。
+> 为便于离线激活，将安装包解压在`家目录`；可下载[录屏文件](image/Screen_recording.mp4)参考
 
-2. 使用`navicat-patcher.exe`替换掉`navicat.exe`和`libcc.dll`里的Navicat激活公钥。 
+1. 运行Navicat，使其初始化环境：
 
-   ```
-   navicat-patcher.exe <Navicat installation path> [RSA-2048 PEM file]
-   ```
+    ```bash
+    cd ~/navicat121_premium_en_x64 && \
+    ./start_navicat
+    ```
 
-   * `<Navicat installation path>`: Navicat的完整安装路径。 
-     
-     __这个参数必须指定。__
+    首次启动时，会提示如下两个窗口，点击“Cancel”即可：
 
-   * `[RSA-2048 PEM file]`: RSA-2048私钥文件的完整路径或相对路径。
-     
-     __这个参数是可选的。__ 如果未指定，`navicat-patcher.exe`将会在当前目录生成一个新的RSA-2048私钥文件。
+    ![](image/Screenshot_2019-04-30_12-31-33.png)
 
-   __例如：(在cmd.exe中)__ 
+    ![](image/Screenshot_2019-04-30_12-31-52.png)
 
-   ```
-   navicat-patcher.exe "C:\Program Files\PremiumSoft\Navicat Premium 12"
+    直至出现`Registration`窗口，选择`Trial`，待加载完成后关闭Navicat，执行`步骤2`:
+
+    ![](image/Screenshot_2019-04-30_12-32-43.png)
+
+2. [从这里](https://github.com/DoubleLabyrinth/navicat-keygen/releases)下载最新的release，并且解压：
+
+    ```bash
+    curl -O -L https://github.com/DoubleLabyrinth/navicat-keygen/releases/download/v3.1/navicat-keygen-for-x64.zip && \
+    unzip navicat-keygen-for-x64.zip
+    ```
+
+3. 下载`navicat-pacther.sh`和`navicat-keygen.sh`：
+
+    ```bash
+    curl -O -L https://raw.githubusercontent.com/zenuo/navicat-keygen/linux/bash/navicat-patcher.sh && \
+    chmod +x navicat-patcher.sh && \
+    curl -O -L https://raw.githubusercontent.com/zenuo/navicat-keygen/linux/bash/navicat-keygen.sh && \
+    chmod +x navicat-keygen.sh
+    ```
+
+4. 使用`navicat-patcher.exe`替换掉`navicat.exe`和`libcc.dll`里的Navicat激活公钥。 
+
+   ```bash
+   ./navicat-patcher.sh
    ```
    
    __Navicat Premium 12.1.12 简体中文版已通过测试__。下面将是一份样例输出。
@@ -115,32 +134,10 @@
    MESSAGE: Patch has been done successfully.
    ```
 
-3. 接下来使用`navicat-keygen.exe`来生成序列号和激活码
+5. 接下来使用`navicat-keygen.exe`来生成序列号和激活码
 
    ```
-   navicat-keygen.exe <-bin|-text> [-adv] <RSA-2048 PrivateKey(PEM file)>
-   ```
-
-   * `<-bin|-text>`: 必须是`-bin`或`-text`。
-
-     如果指定了`-bin`，`navicat-keygen.exe`最终将生成`license_file`文件。这个选项是给Navicat旧激活方式使用的。
-
-     如果指定了`-text`，`navicat-keygen.exe`最终将生成Base64样式的激活码。这个选项是给Navicat新激活方式使用的。
-
-     __这个参数必须指定。__
-
-   * `[-adv]`: 开启高级模式。
-
-     __这个参数是可选的。__ 如果指定了这个参数，`navicat-keygen.exe`将会要求你手工填写产品ID号、语言标识号。这个选项一般是给以后用的。
-
-   * `<RSA-2048 PrivateKey(PEM file)>`: RSA-2048私钥文件的完整路径或相对路径。
-     
-     __这个参数必须指定。__
-
-   __例如：(在cmd.exe中)__ 
-
-   ```bash
-   navicat-keygen.exe -text .\RegPrivateKey.pem
+   ./navicat-keygen.sh
    ```
 
    你会被要求选择Navicat产品类别、语言以及输入主版本号。之后会随机生成一个序列号。
@@ -195,11 +192,11 @@
  
    之后你会被要求填入请求码。注意 __不要关闭命令行__.
 
-4. __断开网络__ 并打开Navicat。找到`注册`窗口，并填入keygen给你的序列号。然后点击`激活`按钮。
+6. 配置一个不存在的`代理`。找到`注册`窗口，并填入keygen给你的序列号。然后点击`激活`按钮。
 
-5. 一般来说在线激活肯定会失败，这时候Navicat会询问你是否`手动激活`，直接选吧。
+7. 在线激活失败，这时候Navicat会询问你是否`手动激活`，直接选吧。
 
-6. 在`手动激活`窗口你会得到一个请求码，复制它并把它粘贴到keygen里。最后别忘了连按至少两下回车结束输入。
+8. 在`手动激活`窗口你会得到一个请求码，复制它并把它粘贴到keygen里。最后别忘了连按至少两下回车结束输入。
 
    ```bash
    Your name: DoubleLabyrinth
@@ -223,5 +220,5 @@
    UI8dzqFzRp/hSDEM0mEqiA==
    ```
 
-  4. 如果不出意外，你会得到一个看似用Base64编码的激活码。直接复制它，并把它粘贴到Navicat的`手动激活`窗口，最后点`激活`按钮。如果没什么意外的话应该能成功激活。
+9. 如果不出意外，你会得到一个看似用Base64编码的激活码。直接复制它，并把它粘贴到Navicat的`手动激活`窗口，最后点`激活`按钮。如果没什么意外的话应该能成功激活。别忘了关闭我们刚刚设置的不存在的代理哦。
 
