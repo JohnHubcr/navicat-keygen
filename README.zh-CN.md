@@ -6,12 +6,13 @@
 
 ## 如何使用这个注册机
 
-> 为便于离线激活，将安装包解压在`家目录`
+> 为便于离线激活，将安装包解压在`家目录`；可下载[录屏文件](image/Screen_recording.mp4)参考
 
 1. 运行Navicat，使其初始化环境：
 
     ```bash
-    ~/navicat121_premium_en_x64/start_navicat
+    cd ~/navicat121_premium_en_x64 && \
+    ./start_navicat
     ```
 
     首次启动时，会提示如下两个窗口，点击“Cancel”即可：
@@ -24,7 +25,7 @@
 
     ![](image/Screenshot_2019-04-30_12-32-43.png)
 
-2. [从这里](https://github.com/DoubleLabyrinth/navicat-keygen/releases)下载最新的release，并且解压。
+2. [从这里](https://github.com/DoubleLabyrinth/navicat-keygen/releases)下载最新的release，并且解压：
 
     ```bash
     curl -O -L https://github.com/DoubleLabyrinth/navicat-keygen/releases/download/v3.1/navicat-keygen-for-x64.zip && \
@@ -40,7 +41,7 @@
     chmod +x navicat-keygen.sh
     ```
 
-3. 使用`navicat-patcher.exe`替换掉`navicat.exe`和`libcc.dll`里的Navicat激活公钥。 
+4. 使用`navicat-patcher.exe`替换掉`navicat.exe`和`libcc.dll`里的Navicat激活公钥。 
 
    ```bash
    ./navicat-patcher.sh
@@ -133,7 +134,7 @@
    MESSAGE: Patch has been done successfully.
    ```
 
-3. 接下来使用`navicat-keygen.exe`来生成序列号和激活码
+5. 接下来使用`navicat-keygen.exe`来生成序列号和激活码
 
    ```
    ./navicat-keygen.sh
@@ -191,11 +192,11 @@
  
    之后你会被要求填入请求码。注意 __不要关闭命令行__.
 
-4. __断开网络__ 并打开Navicat。找到`注册`窗口，并填入keygen给你的序列号。然后点击`激活`按钮。
+6. 配置一个不存在的`代理`。找到`注册`窗口，并填入keygen给你的序列号。然后点击`激活`按钮。
 
-5. 一般来说在线激活肯定会失败，这时候Navicat会询问你是否`手动激活`，直接选吧。
+7. 在线激活失败，这时候Navicat会询问你是否`手动激活`，直接选吧。
 
-6. 在`手动激活`窗口你会得到一个请求码，复制它并把它粘贴到keygen里。最后别忘了连按至少两下回车结束输入。
+8. 在`手动激活`窗口你会得到一个请求码，复制它并把它粘贴到keygen里。最后别忘了连按至少两下回车结束输入。
 
    ```bash
    Your name: DoubleLabyrinth
@@ -219,5 +220,5 @@
    UI8dzqFzRp/hSDEM0mEqiA==
    ```
 
-  4. 如果不出意外，你会得到一个看似用Base64编码的激活码。直接复制它，并把它粘贴到Navicat的`手动激活`窗口，最后点`激活`按钮。如果没什么意外的话应该能成功激活。
+9. 如果不出意外，你会得到一个看似用Base64编码的激活码。直接复制它，并把它粘贴到Navicat的`手动激活`窗口，最后点`激活`按钮。如果没什么意外的话应该能成功激活。别忘了关闭我们刚刚设置的不存在的代理哦。
 
