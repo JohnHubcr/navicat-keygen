@@ -2,10 +2,6 @@
 
 [中文版README](README_FOR_LINUX.zh-CN.md)
 
-This repository will tell you how Navicat offline activation works.
-
-[How does it work?](HOW_DOES_IT_WORK.md)
-
 ## How to use?
 
 > For easier offline activation, we are going to install Navicat to `home`; you can download [Screen recoding](image/Screen_recording.mp4) for references.

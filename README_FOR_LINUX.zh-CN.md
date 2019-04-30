@@ -1,9 +1,5 @@
 # Navicat Keygen - for Linux
 
-这份repo将会告诉你Navicat是怎么完成离线激活的。
-
-[注册机是怎么工作的?](HOW_DOES_IT_WORK.zh-CN.md)
-
 ## 如何使用这个注册机
 
 > 为便于离线激活，将安装包解压在`家目录`；可下载[录屏文件](image/Screen_recording.mp4)参考
