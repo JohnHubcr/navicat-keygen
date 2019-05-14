@@ -2,9 +2,9 @@
 
 ## 如何使用这个注册机
 
-> 为便于离线激活，将安装包解压在`家目录`；可下载[录屏文件](image/Screen_recording.mp4)参考
+> 可下载[录屏文件](image/Screen_recording.mp4)参考
 
-1. 运行Navicat，使其初始化环境：
+1. 切换到解压安装包的路径，本示例解压到了`家目录`，运行Navicat，使其初始化环境：
 
     ```bash
     cd ~/navicat121_premium_en_x64 && \
@@ -23,6 +23,8 @@
 
 2. [从这里](https://github.com/DoubleLabyrinth/navicat-keygen/releases)下载最新的release，并且解压：
 
+    > 此处下载的是64位的可执行文件，若您使用32位，请下载对应版本
+
     ```bash
     curl -O -L https://github.com/DoubleLabyrinth/navicat-keygen/releases/download/v3.1/navicat-keygen-for-x64.zip && \
     unzip navicat-keygen-for-x64.zip
@@ -31,13 +33,15 @@
 3. 下载`navicat-pacther.sh`和`navicat-keygen.sh`：
 
     ```bash
-    curl -O -L https://raw.githubusercontent.com/zenuo/navicat-keygen/linux/bash/navicat-patcher.sh && \
+    curl -O -L https://raw.githubusercontent.com/DoubleLabyrinth/navicat-keygen/linux/bash/navicat-patcher.sh && \
     chmod +x navicat-patcher.sh && \
-    curl -O -L https://raw.githubusercontent.com/zenuo/navicat-keygen/linux/bash/navicat-keygen.sh && \
+    curl -O -L https://raw.githubusercontent.com/DoubleLabyrinth/navicat-keygen/linux/bash/navicat-keygen.sh && \
     chmod +x navicat-keygen.sh
     ```
 
 4. 使用`navicat-patcher.exe`替换掉`navicat.exe`和`libcc.dll`里的Navicat激活公钥。 
+
+   > 执行此步骤时，请将`Navicat`关闭
 
    ```bash
    ./navicat-patcher.sh
