@@ -1,4 +1,4 @@
-# Navicat Keygen
+# Navicat Keygen - for Linux
 
 [中文版README](README.zh-CN.md)
 
