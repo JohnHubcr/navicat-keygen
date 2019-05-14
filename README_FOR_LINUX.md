@@ -1,6 +1,6 @@
 # Navicat Keygen - for Linux
 
-[中文版README](README.zh-CN.md)
+[中文版README](README_FOR_LINUX.zh-CN.md)
 
 ## How to use?
 
