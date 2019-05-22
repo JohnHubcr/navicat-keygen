@@ -33,9 +33,9 @@
 3. 下载`navicat-pacther.sh`和`navicat-keygen.sh`：
 
     ```bash
-    curl -O -L https://raw.githubusercontent.com/DoubleLabyrinth/navicat-keygen/linux/bash/navicat-patcher.sh && \
+    curl -O -L https://raw.githubusercontent.com/DoubleLabyrinth/navicat-keygen/windows/bash/navicat-patcher.sh && \
     chmod +x navicat-patcher.sh && \
-    curl -O -L https://raw.githubusercontent.com/DoubleLabyrinth/navicat-keygen/linux/bash/navicat-keygen.sh && \
+    curl -O -L https://raw.githubusercontent.com/DoubleLabyrinth/navicat-keygen/windows/bash/navicat-keygen.sh && \
     chmod +x navicat-keygen.sh
     ```
 
