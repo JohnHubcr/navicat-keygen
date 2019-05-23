@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 cd `dirname "$0"`
 navicat_root=`pwd`
