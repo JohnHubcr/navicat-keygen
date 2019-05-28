@@ -13,13 +13,14 @@ export WINELOADER="$navicat_root/$WINEDIR/bin/wine64"
 export WINESERVER="$navicat_root/$WINEDIR/bin/wineserver"
 export WINEPREFIX="$HOME/.navicat64"
 
-# 获取家目录（例如"/home/tom/"）之后的路径
-path_after_first_slash=${navicat_root:1}
-second_slash_index=`expr index $path_after_first_slash "/"`
-path_after_sencod_slash=${path_after_first_slash:$second_slash_index}
-third_slash_index=`expr index $path_after_sencod_slash "/"`
-path_after_third_slash=${path_after_sencod_slash:$third_slash_index}
 # 将斜线替换为反斜线
-path_back_slash=${path_after_third_slash/\//\\}
+navicat_root_back_slash=${navicat_root//\//\\}
+# 前缀
+prefix='Z:\'
+# 后缀
+suffix='\Navicat'
+# wine环境中的navicat路径
+navicat_path="$prefix$navicat_root_back_slash$suffix"
 
-exec "${WINELOADER:-wine}" "navicat-patcher.exe" 'Y:\'$path_back_slash'\Navicat'
+# wine执行navicat-patcher.exe
+exec "${WINELOADER:-wine}" "navicat-patcher.exe" "$navicat_path"
