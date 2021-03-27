@@ -1,137 +1,201 @@
 # Navicat Keygen
 
-  This repository will tell you how Navicat offline activation works.
+[中文版README](README.zh-CN.md)
 
-## 1. Keyword Explanation.
+This repository will tell you how Navicat offline activation works.
 
-  * __Navicat Activation Public Key__
+[How does it work?](HOW_DOES_IT_WORK.md)
 
-    It is a __RSA-2048__ public key that Navicat used to encrypt or decrypt offline activation information.
+## How to use?
 
-    It is stored in __navicat.exe__ as a kind of resource called __RCData__. You can see it by a kind of software [___Resource Hacker___](http://www.angusj.com/resourcehacker/). The concrete content is:
+1. Download the latest release [from here](https://github.com/DoubleLabyrinth/navicat-keygen/releases).
 
-    > -----BEGIN PUBLIC KEY-----  
-    > MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw1dqF3SkCaAAmMzs889I  
-    > qdW9M2dIdh3jG9yPcmLnmJiGpBF4E9VHSMGe8oPAy2kJDmdNt4BcEygvssEfginv  
-    > a5t5jm352UAoDosUJkTXGQhpAWMF4fBmBpO3EedG62rOsqMBgmSdAyxCSPBRJIOF  
-    > R0QgZFbRnU0frj34fiVmgYiLuZSAmIbs8ZxiHPdp1oD4tUpvsFci4QJtYNjNnGU2  
-    > WPH6rvChGl1IRKrxMtqLielsvajUjyrgOC6NmymYMvZNER3htFEtL1eQbCyTfDmt  
-    > YyQ1Wt4Ot12lxf0wVIR5mcGN7XCXJRHOFHSf1gzXWabRSvmt1nrl7sW6cjxljuuQ  
-    > awIDAQAB  
-    > -----END PUBLIC KEY-----  
+2. Use `navicat-patcher.exe` to replace __Navicat Activation Public Key__ that is stored in `navicat.exe` and `libcc.dll`.
+   
+   ```
+   navicat-patcher.exe <Navicat installation path> [RSA-2048 PEM file]
+   ```
 
-    If you have the corresponding private key, please tell me. I would be very appreciated for your generous.
+   * `<Navicat installation path>`: The full path to Navicat installation folder. 
+     
+     __This parameter must be specified.__
 
-  * __Request Code__
+   * `[RSA-2048 PEM file]`: The full path or relative path to a RSA-2048 private key file. 
+     
+     __This parameter is optional.__ If not specified, `navicat-patcher.exe` will generate a new RSA-2048 private key file `RegPrivateKey.pem` at current directory.
 
-    It is a Base64 string that represents 256-bytes-long data, while the 256-bytes-long data is the cipher text of the __offline activation information__ encrypted by __Navicat Activation Public Key__.
+   __Example: (in cmd.exe)__ 
 
-  * __Offline Activation Request Information__
+   ```
+   navicat-patcher.exe "C:\Program Files\PremiumSoft\Navicat Premium 12" .\RegPrivateKey.pem
+   ```
+   
+   It has been tested on __Navicat Premium 12.1.11 Simplified Chinese version__. The following is an example of output.
 
-    It is just a JSON-style ASCII string which contains 3 items. Respectively they are `"K"`, `"DI"` and `"P"`, which represent __snKey__, __checksum__ (related with your machine and OS), __Platform__ (Appropriately speaking, it should be OS Type).
+   ```
+   MESSAGE: Navicat.exe has been found.
+   MESSAGE: libcc.dll has been found.
 
-    Like:  
-    > {"K": "xxxxxxxxxxxxxxxx", "DI": "yyyyyyyyyyyyy", "P": "WIN8"}
+   MESSAGE: [Solution0] Keyword has been found: offset = +0x029a4b9c.
+   MESSAGE: [Solution1] Keywords[0] has been found: offset = +0x02294960.
+   MESSAGE: [Solution1] Keywords[1] has been found: offset = +0x0074bd29.
+   MESSAGE: [Solution1] Keywords[2] has been found: offset = +0x02294670.
+   MESSAGE: [Solution1] Keywords[3] has been found: offset = +0x0074bd0f.
+   MESSAGE: [Solution1] Keywords[4] has been found: offset = +0x02294664.
+   MESSAGE: [Solution2] Keywords[0] has been found: offset = +0x01643118.
+   MESSAGE: [Solution2] Keywords[1] has been found: offset = +0x016437c1.
+   MESSAGE: [Solution2] Keywords[2] has been found: offset = +0x01643ed0.
+   MESSAGE: [Solution2] Keywords[3] has been found: offset = +0x016445df.
+   MESSAGE: [Solution2] Keywords[4] has been found: offset = +0x01644cee.
+   MESSAGE: [Solution2] Keywords[5] has been found: offset = +0x016453fd.
+   MESSAGE: [Solution2] Keywords[6] has been found: offset = +0x01645b0b.
+   MESSAGE: [Solution2] Keywords[7] has been found: offset = +0x01646217.
+   MESSAGE: [Solution2] Keywords[8] has been found: offset = +0x01646926.
+   MESSAGE: [Solution2] Keywords[9] has been found: offset = +0x01647035.
+   ...
+   ...
 
-  * __Activation Code__
+   Your RSA public key:
+   -----BEGIN PUBLIC KEY-----
+   MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtOZGsX7UoDPuxCfEuw4i
+   yWDASpwaN19GaPNrTlWz6K7MKXGrAQpYD5gNZ8nGdfRgp52TErTHSNoRjgfpxGqK
+   ApPUISsIanGMcyf/H2b8pGuz1oF19kVKSyZTPaVLbE+1Cw7FULbI04bc64XnWSHo
+   aQAXrYKGpC7oDomRGMtx28figu3AHAk1UQrcCvE3+0ITTA7X8xaRwz6+gb+uLgCd
+   iXyRYDodG8i+kk1YIt3f2mt7jH+uEHqBYjIfvvo6g5MZz4KNz7Ewc6+sDyO8bmlX
+   eFnHo6YAgCcaHVvVtGNCxCd1O5wWHvUN985HHQYnFr7qzJaL9cPb735pP2hb0IXe
+   ywIDAQAB
+   -----END PUBLIC KEY-----
 
-    It is a Base64 string that represents 256-bytes-long data, while the 256-bytes-long data is the cipher text of the __offline activation response information__ encrypted by __Navicat Activation Private Key__ (so far, we don't know official activation private key).
 
-  * __Offline Activation Response Information__
+   MESSAGE: Navicat.exe has been backed up successfully.
+   MESSAGE: libcc.dll has been backed up successfully.
 
-    Just like __Offline Activation Request Information__, it is also a JSON-style ASCII string. But it contains 5 items. Respectively they are `"K"`, `"N"`, `"O"`, `"T"`, '`DI`'.
+   ......
+   ......
+   ......
+   @+0x016ED490: 83 F0 49 --> 83 F0 49
+   @+0x016EDB9F: 83 F0 44 --> 83 F0 44
+   @+0x016EE2AE: 83 F0 41 --> 83 F0 41
+   @+0x016EE9BD: 83 F0 51 --> 83 F0 51
+   @+0x016EF0CB: 83 F0 41 --> 83 F0 41
+   @+0x016EF7D7: 83 F0 42 --> 83 F0 42
 
-    `"K"` and `"DI"` has the same meaning mentioned in __Offline Activation Request Information__ and must be same with the corresponding items in __Offline Activation Request Information__.
+   Solution0 has been done successfully.
+   Solution1 has been done successfully.
+   Solution2 has been done successfully.
+   ```
 
-    `"N"`, `"O"`, `"T"` represent __Name__, __Organization__, __Time__ respectively. __Name__ and __Organization__ are string and the type of __Time__ is unknown.
+3. Then use `navicat-keygen.exe` to generate __snKey__ and __Activation Code__
 
-    `"T"` can be omitted.
+   ```
+   navicat-keygen.exe <-bin|-text> [-adv] <RSA-2048 PrivateKey(PEM file)>
+   ```
 
-  * __snKey__
+   * `<-bin|-text>`: Must be `-bin` or `-text`. 
+  
+     If `-bin` is specified, `navicat-keygen.exe` will finally generate `license_file`. It is used for Navicat old activation method only.
 
-    It is a 4-block-long string, while every block is 4-chars-long.
+     If `-text` is specified, `navicat-keygen.exe` will finally generate a Base64-style string which is __Activation Code__. It is used for Navicat new activation method. 
 
-    __snKey__ is generated by 10-bytes-long data. In order to explain it easily, I use __data[10]__ to represent the 10-bytes-long data.
+     __This parameter must be specified.__
 
-    1. __data[0]__ and __data[1]__ must be `0x68` and `0x2A` respectively.
+   * `[-adv]`: Enable advanced mode.
 
-       _`May change when Navicat product changes. Uncertain yet.`_  
+     __This parameter is optional.__ If specified, `navicat-keygen.exe` will ask you input Navicat product ID number, language signature numbers. It is for future use generally.
 
-    2. __data[2]__, __data[3]__ and __data[4]__ can be any byte. Just set them whatever you want.
+   * `<RSA-2048 PrivateKey(PEM file)>`: The full path or relative path to a RSA-2048 private key file. 
+     
+     __This parameter must be specified.__
 
-       _`May change when Navicat product changes. Uncertain yet. But it's very possible right.`_  
+   __Example: (in cmd.exe)__
 
-    3. __data[5]__ and __data[6]__ must be `0xCE` and `0x32` respectively.
+   ```bash
+   navicat-keygen.exe -text .\RegPrivateKey.pem
+   ```
 
-       _`May change when Navicat product changes. Uncertain yet.`_  
+   You will be asked to select Navicat product, language and input major version number. After that an randomly generated __snKey__ will be given.
 
-    4. __data[7]__ represents whether it is __commercial license__ or __non-commercial license__.
+   ```
+   Select Navicat product:
+   1. DataModeler
+   2. Premium
+   3. MySQL
+   4. PostgreSQL
+   5. Oracle
+   6. SQLServer
+   7. SQLite
+   8. MariaDB
+   9. MongoDB
+   10. ReportViewer
 
-       In Navicat 12: `0x65` is __commercial license__, `0x66` is __non-commercial license__.  
-       In Navicat 11: `0x15` is __commercial license__, `0x16` is __non-commercial license__.  
+   (Input index)> 1
 
-       _`May change when Navicat product changes. Uncertain yet.`_  
-       _`Must change when version change.`_  
+   Select product language:
+   1. English
+   2. Simplified Chinese
+   3. Traditional Chinese
+   4. Japanese
+   5. Polish
+   6. Spanish
+   7. French
+   8. German
+   9. Korean
+   10. Russian
+   11. Portuguese
 
-    5. High 4 bits of __data[8]__ represents __version number__. Low 4 bits is unknown, but we can use it to delay activation deadline. Possible value is `0000` or `0001`.
+   (Input index)> 1
 
-       In Navicat 12: High 4 bits must be `1100`, which is the binary of number `12`.
-       In Navicat 11: High 4 bits must be `1011`, which is the binary of number `11`.
+   (Input major version number, range: 0 ~ 15, default: 12)> 12
 
-       _`Must change when version change.`_  
+   Serial number:
+   NAVA-DHCN-P2OI-DV46
 
-    6. __data[9]__ is unknown, but you can set it `0xFD` or `0xFC` or `0xFB` if you want to use __not-for-resale license__.
+   Your name: 
+   ```
 
-       _`May change when Navicat product changes. Uncertain yet.`_  
+   You can use this __snKey__ to activate your Navicat preliminarily.
+     
+   Then you will be asked to input `Your name` and `Your organization`. Just set them whatever you want, but not too long.
 
-    After that. Navicat use __DES__ with __ECB mode__ to encrypt the last 8 bytes which are from __data[2]__ to __data[9]__.
+   ```bash
+   Your name: DoubleLabyrinth
+   Your organization: DoubleLabyrinth
+   Input request code (in Base64), input empty line to end:
+   ```
+     
+   After that, you will be asked to input the request code. Now __DO NOT CLOSE KEYGEN__.
 
-    The DES key is:
+4. __Disconnect your network__ and open Navicat. Find and click `Registration`. Fill `Registration Key` by __snKey__ that the keygen gave and click `Activate`.
 
-    ```cpp
-    unsigned char DESKey = { 0x64, 0xAD, 0xF3, 0x2F, 0xAE, 0xF2, 0x1A, 0x27 };
-    ```
+5. Generally online activation will failed and Navicat will ask you do `Manual Activation`, just choose it.
 
-    Then encode the 10-bytes-long data:
+6. Copy your request code and paste it in the keygen. Input empty line to tell the keygen that your input ends.
 
-    1. Regard __data[10]__ as a 80-bits-long data.
+   ```bash
+   Your name: DoubleLabyrinth
+   Your organization: DoubleLabyrinth
 
-       If __data[10]__ starts with `0x68` and `0x2A`, so the 80-bits-long data is `01011000 00101010......`
+   Input request code (in Base64), input empty line to end:
+   q/cv0bkTrG1YDkS+fajFdi85bwNVBD/lc5jBYJPOSS5bfl4DdtnfXo+RRxdMjJtEcYQnvLPi2LF0
+   OB464brX9dqU29/O+A3qstSyhBq5//iezxfu2Maqca4y0rVtZgQSpEnZ0lBNlqKXv7CuTUYCS1pm
+   tEPgwJysQTMUZf7tu5MR0cQ+hY/AlyQ9iKrQAMhHklqZslaisi8VsnoIqH56vfTyyUwUQXrFNc41
+   qG5zZNsXu/NI79JOo7qTvcFHQT/k5cTadbKTxY+9c5eh+nF3JR7zEa2BDDfdQRLNvy4DTSyxdYXd
+   sAk/YPU+JdWI+8ELaa0SuAuNzr5fEkD6NDSG2A==
 
-    2. Divide the 80-bits-long data as 16 5-bits-long blocks.
+   Request Info:
+   {"K":"NAVADHCNP2OIDV46", "DI":"Y2eJk9vrvfGudPG7Mbdn", "P":"WIN 8"}
 
-       If __data[10]__ starts with `0x68` and `0x2A`, so the 80-bits-long data is `01011`, `00000`, `10101`, `0....`, ...
+   Response Info:
+   {"K":"NAVADHCNP2OIDV46","DI":"Y2eJk9vrvfGudPG7Mbdn","N":"DoubleLabyrinth","O":"DoubleLabyrinth","T":1537630251}
 
-    3. So the value every block is less than 32. Map them by a encode-table:
+   License:
+   oyoMYr9cfVGXeT7F1dqBwHsB/vvWj6SUL6aR+Kzb0lm5IyEj1CgovuSq+qMzFfx+
+   oHMFaGKFg6viOY2hfJcrO2Vdq0hXZS/B/Ie3jBS2Ov37v8e3ufVajaH+wLkmEpLd
+   xppCVLkDQjIHYR2IPz5s/L/RuWqDpEY4TPmGFF6q+xQMnqQA3vXPyG+JYMARXLru
+   Y1gCDLN30v3DpyOeqKmFjUqiHK5h8s0NYiH2OpMyaCpi12JsF23miP89ldQp3+SJ
+   8moo0cNGy7sFp2gX9ol2zVoo7qxfYlLl03f7CALJ6im0sx4yBsmlzFDdvpQUbXk8
+   YZ5rT4LML2Fx6Wgnnklb5g==
+   ```
 
-       ```cpp
-       char EncodeTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-       ```
+7. Finally, you will get __Activation Code__ which looks like a Base64 string. Just copy it and paste it in Navicat `Manual Activation` window, then click `Activate`. If nothing wrong, activation should be done successfully.
 
-       Then you will get a 16-char-long string.
-
-       If __data[10]__ starts with `0x68` and `0x2A`, so after encoded, it should starts with `"N"`, `"A"`, `"V"`.
-
-    4. Divide the 16-char-long string to four 4-chars-long blocks, Then you get __snKey__.
-
-## 3. Activation Process
-
-  1. Check whether __sn_Key__ that user inputs is legal.
-
-  2. After user clicks `Activate`, Navicat will start online activation first. If fails, user can choose offline activation.
-
-  3. Navicat will use the __snKey__ that user inputs and some information collected from user's machine to generate __Offline Activation Request Information__, then encrypt it by __Navicat Activation Public Key__ and return Base64-encoded string as __Request Code__.
-
-  4. In legal way, the __Request Code__ should be sent to Navicat official activation server by a Internet-accessible computer. And Navicat official activation server will return a legal __Activation Code__.
-
-     But now, we use keygen to play the official activation server's role.
-
-     1. According to the __Request Code__, Get `"DI"` value and `"K"` value.
-
-     2. Fill __Offline Activation Response Information__ with `"K"` value, name, organization name and `"DI"` value.
-
-     3. Encrypt __Offline Activation Response Information__ by __Navicat Activation Private Key__ and you will get 256-byte-long data.
-
-     4. Encode 256-byte-long data by Base64. The result is __Activation Code__.
-
-  5. Input __Activation Code__, then offline activation is done.

@@ -1,105 +1,302 @@
-#include <tchar.h>
-#include <windows.h>
+#include "def.hpp"
 
-#include <openssl/err.h>
-#include <openssl/bio.h>
-#include <openssl/rsa.h>
-#include <openssl/pem.h>
+#define SAFE_DELETE(x) { delete x; x = nullptr; }
 
-#pragma comment(lib, "libcrypto.lib")
+static void help() {
+    PRINT_MESSAGE("Usage:");
+    PRINT_MESSAGE("    navicat-patcher.exe <Navicat installation path> [RSA-2048 PEM file]");
+}
 
-BOOL BackupNavicat(PTSTR NavicatFileName) {
-    TCHAR new_NavicatFileName[1024] = { };
+std::Tstring InstallationPath;
+std::Tstring MainAppName;
+std::Tstring LibccName = TEXT("libcc.dll");
 
-    if (NavicatFileName == nullptr)
-        NavicatFileName = TEXT("navicat.exe");
+static BOOL SetPath(const std::Tstring& Path) {
+    DWORD Attr;
 
-    _stprintf_s(new_NavicatFileName, TEXT("%s%s"), NavicatFileName, TEXT(".backup"));
-
-    if (!CopyFile(NavicatFileName, new_NavicatFileName, TRUE)) {
-        switch (GetLastError()) {
-            case ERROR_FILE_NOT_FOUND:
-                _tprintf_s(TEXT("Cannot find %s.\r\n"), NavicatFileName);
-                break;
-            case ERROR_FILE_EXISTS:
-                _tprintf_s(TEXT("Backup file already exists.\r\n"));
-                break;
-            default:
-                _tprintf_s(TEXT("Unknown error. CODE: 0x%08x.\r\n"), GetLastError());
-        }
+    Attr = GetFileAttributes(Path.c_str());
+    if (Attr == INVALID_FILE_ATTRIBUTES) {
+        if (GetLastError() == ERROR_INVALID_NAME || GetLastError() == ERROR_FILE_NOT_FOUND)
+            REPORT_ERROR("ERROR: Invalid path. Are you sure the path you specified is correct?");
+        else
+            REPORT_ERROR_WITH_CODE("ERROR: GetFileAttributes failed.", GetLastError());
         return FALSE;
     }
 
-    _tprintf_s(TEXT("%s has been backed up.\r\n"), NavicatFileName);
+    if ((Attr & FILE_ATTRIBUTE_DIRECTORY) == 0) {
+        REPORT_ERROR("ERROR: Path is not a directory.");
+        return FALSE;
+    }
+
+    InstallationPath = Path;
+    if (InstallationPath.back() != TEXT('\\') && InstallationPath.back() != TEXT('/'))
+        InstallationPath.push_back(TEXT('/'));  // for Linux compatible
+
     return TRUE;
 }
 
-BOOL ReplaceNavicatPublicKey(HANDLE resUpdater, void* pemPublicKey, size_t length) {
-    return UpdateResource(resUpdater,
-                          RT_RCDATA,
-                          TEXT("ActivationPubKey"),
-                          MAKELANGID(LANG_ENGLISH, SUBLANG_DEFAULT),
-                          pemPublicKey, length);
+static DWORD BackupFile(std::Tstring& from, std::Tstring& to) {
+    if (::CopyFile(from.c_str(), to.c_str(), TRUE))
+        return ERROR_SUCCESS;
+    else
+        return GetLastError();
 }
 
-RSA* GeneratePrivateKey() {
-    RSA* PrivateKey = RSA_generate_key(2048, RSA_F4, nullptr, nullptr);
-    BIO* PrivateKeyFile = BIO_new(BIO_s_file());
-    BIO_write_filename(PrivateKeyFile, "RegPrivateKey.pem");
-    PEM_write_bio_RSAPrivateKey(PrivateKeyFile, PrivateKey, nullptr, nullptr, 0, nullptr, nullptr);
-    BIO_free_all(PrivateKeyFile);
+static BOOL LoadKey(RSACipher* cipher, LPTSTR filename, 
+                    Patcher::Solution* pSolution0, 
+                    Patcher::Solution* pSolution1,
+                    Patcher::Solution* pSolution2) {
+    if (filename) {
+        std::string PrivateKeyFileName;
 
-    return PrivateKey;
+        if (!Helper::ConvertToUTF8(filename, PrivateKeyFileName)) {
+            REPORT_ERROR("ERROR: ConvertToUTF8 failed.");
+            return FALSE;
+        }
+
+        if (!cipher->ImportKeyFromFile<RSACipher::KeyType::PrivateKey, RSACipher::KeyFormat::PEM>(PrivateKeyFileName)) {
+            REPORT_ERROR("ERROR: cipher->ImportKeyFromFile failed.");
+            return FALSE;
+        }
+
+        if (pSolution0 && !pSolution0->CheckKey(cipher) || 
+            pSolution1 && !pSolution1->CheckKey(cipher) ||
+            pSolution2 && !pSolution2->CheckKey(cipher)) {
+            REPORT_ERROR("ERROR: The RSA private key you provide cannot be used.");
+            return FALSE;
+        }
+
+    } else {
+        PRINT_MESSAGE("MESSAGE: Generating new RSA private key, it may take a long time.");
+
+        do {
+            cipher->GenerateKey(2048);
+        } while (pSolution0 && !pSolution0->CheckKey(cipher) || 
+                 pSolution1 && !pSolution1->CheckKey(cipher) ||
+                 pSolution2 && !pSolution2->CheckKey(cipher));   // re-generate RSA key if one of CheckKey return false
+
+        if (!cipher->ExportKeyToFile<RSACipher::KeyType::PrivateKey, RSACipher::KeyFormat::NotSpecified>("RegPrivateKey.pem")) {
+            REPORT_ERROR("ERROR: Failed to save RSA private key.");
+            return FALSE;
+        }
+
+        PRINT_MESSAGE("MESSAGE: New RSA private key has been saved to RegPrivateKey.pem.");
+    }
+
+    std::string PublicKeyString = cipher->ExportKeyString<RSACipher::KeyType::PublicKey, RSACipher::KeyFormat::PEM>();
+    if (PublicKeyString.empty()) {
+        REPORT_ERROR("ERROR: cipher->ExportKeyString failed.");
+        return FALSE;
+    }
+
+    PRINT_MESSAGE("Your RSA public key:");
+    PRINT_LPCSTR(PublicKeyString.c_str());
+    return TRUE;
 }
 
 int _tmain(int argc, TCHAR* argv[]) {
     if (argc != 2 && argc != 3) {
-        _tprintf_s(TEXT("Usage:\r\n"));
-        _tprintf_s(TEXT("    navicat-patcher.exe <navicat.exe path>\r\n"));
+        help();
         return 0;
     }
 
-    if (BackupNavicat(argv[1]) == FALSE)
-        return GetLastError();
+    RSACipher* cipher = nullptr;
+    FileMapper* pMainApp = nullptr;
+    FileMapper* pLibcc = nullptr;
+    Patcher::Solution* pSolution0 = nullptr;
+    Patcher::Solution* pSolution1 = nullptr;
+    Patcher::Solution* pSolution2 = nullptr;
+    
+    DWORD ErrorCode;
 
-    RSA* PrivateKey = GeneratePrivateKey();
-
-    HANDLE hUpdater = BeginUpdateResource(argv[1], FALSE);
-    if (hUpdater == NULL) {
-        _tprintf_s(TEXT("Cannot open file. CODE: 0x%08x\r\n"), GetLastError());
-        RSA_free(PrivateKey);
-        return GetLastError();
+    cipher = RSACipher::Create();
+    if (cipher == nullptr) {
+        REPORT_ERROR("ERROR: RSACipher::Create failed.");
+        goto ON_tmain_ERROR;
     }
 
-    char pemPublicKey[1024] = { };
-    {
-        char temp_buf[1024] = { };
-        BIO* BIO_pemPublicKey = BIO_new(BIO_s_mem());
+    pMainApp = new FileMapper();
+    pLibcc = new FileMapper();
+    pSolution0 = new Patcher::Solution0();
+    pSolution1 = new Patcher::Solution1();
+    pSolution2 = new Patcher::Solution2();
 
-        PEM_write_bio_RSA_PUBKEY(BIO_pemPublicKey, PrivateKey);
-        BIO_read(BIO_pemPublicKey, temp_buf, 1024);
-        BIO_free_all(BIO_pemPublicKey);
+    if (!SetPath(argv[1])) {
+        PRINT_MESSAGE("The path you specified:");
+        PRINT_LPCTSTR(argv[1]);
+        goto ON_tmain_ERROR;
+    }
 
-        char* pemPublicKey_ptr = pemPublicKey;
-        for (size_t i = 0; i < 1024; ++i) {
-            if (temp_buf[i] == '\n')
-                *(pemPublicKey_ptr++) = '\r';
-            if (temp_buf[i] == 0)
-                break;
-            *(pemPublicKey_ptr++) = temp_buf[i];
+FindMainApp:
+    ErrorCode = pMainApp->MapFile(InstallationPath + TEXT("Navicat.exe"));
+    if (ErrorCode == ERROR_SUCCESS) {
+        MainAppName = TEXT("Navicat.exe");
+        PRINT_MESSAGE("MESSAGE: Navicat.exe has been found.");
+        goto FindLibcc;
+    }
+    if (ErrorCode == ERROR_ACCESS_DENIED) {
+        PRINT_MESSAGE("ERROR: Cannot open Navicat.exe for ERROR_ACCESS_DENIED.");
+        PRINT_MESSAGE("Please re-run with Administrator privilege.");
+        goto ON_tmain_ERROR;
+    }
+    if (ErrorCode != ERROR_FILE_NOT_FOUND) {
+        REPORT_ERROR_WITH_CODE("ERROR: Cannot open Navicat.exe.", ErrorCode);
+        goto ON_tmain_ERROR;
+    }
+
+    ErrorCode = pMainApp->MapFile(InstallationPath + TEXT("Modeler.exe"));
+    if (ErrorCode == ERROR_SUCCESS) {
+        MainAppName = TEXT("Modeler.exe");
+        PRINT_MESSAGE("MESSAGE: Modeler.exe has been found.");
+        goto FindLibcc;
+    }
+    if (ErrorCode == ERROR_ACCESS_DENIED) {
+        PRINT_MESSAGE("ERROR: Cannot open Modeler.exe for ERROR_ACCESS_DENIED.");
+        PRINT_MESSAGE("Please re-run with Administrator privilege.");
+        goto ON_tmain_ERROR;
+    }
+    if (ErrorCode != ERROR_FILE_NOT_FOUND) {
+        REPORT_ERROR_WITH_CODE("ERROR: Cannot open Modeler.exe.", ErrorCode);
+        goto ON_tmain_ERROR;
+    }
+
+    ErrorCode = pMainApp->MapFile(InstallationPath + TEXT("Rviewer.exe"));
+    if (ErrorCode == ERROR_SUCCESS) {
+        MainAppName = TEXT("Rviewer.exe");
+        PRINT_MESSAGE("MESSAGE: Rviewer.exe has been found.");
+        goto FindLibcc;
+    }
+    if (ErrorCode == ERROR_ACCESS_DENIED) {
+        PRINT_MESSAGE("ERROR: Cannot open Rviewer.exe for ERROR_ACCESS_DENIED.");
+        PRINT_MESSAGE("Please re-run with Administrator privilege.");
+        goto ON_tmain_ERROR;
+    }
+    if (ErrorCode != ERROR_FILE_NOT_FOUND) {
+        REPORT_ERROR_WITH_CODE("ERROR: Cannot open Rviewer.exe.", ErrorCode);
+        goto ON_tmain_ERROR;
+    }
+
+    PRINT_MESSAGE("ERROR: Cannot find main application. Are you sure the path you specified is correct?");
+    PRINT_MESSAGE("The path you specified:");
+    PRINT_LPCTSTR(argv[1]);
+    goto ON_tmain_ERROR;
+
+FindLibcc:
+    ErrorCode = pLibcc->MapFile(InstallationPath + LibccName);
+    if (ErrorCode == ERROR_SUCCESS) {
+        PRINT_MESSAGE("MESSAGE: libcc.dll has been found.");
+    } else if (ErrorCode == ERROR_FILE_NOT_FOUND) {
+        PRINT_MESSAGE("MESSAGE: libcc.dll is not found. Solution1 and Solution2 will be omitted.");
+        SAFE_DELETE(pSolution2);
+        SAFE_DELETE(pSolution1);
+        SAFE_DELETE(pLibcc);
+    } else if (ErrorCode == ERROR_ACCESS_DENIED) {
+        PRINT_MESSAGE("ERROR: Cannot open libcc.dll for ERROR_ACCESS_DENIED.");
+        PRINT_MESSAGE("Please re-run with Administrator privilege.");
+        goto ON_tmain_ERROR;
+    } else {
+        REPORT_ERROR_WITH_CODE("ERROR: Cannot open libcc.dll.", ErrorCode);
+        goto ON_tmain_ERROR;
+    }
+
+SearchPublicKey:
+    pSolution0->SetFile(pMainApp);
+    if (pSolution1) pSolution1->SetFile(pLibcc);
+    if (pSolution2) pSolution2->SetFile(pLibcc);
+
+    PRINT_MESSAGE("");
+    if (!pSolution0->FindPatchOffset()) {
+        _tprintf_s(TEXT("@%s LINE: %u\n"), TEXT(__FUNCTION__), __LINE__);
+        _tprintf_s(TEXT("ERROR: Cannot find RSA public key in %s.\n"), MainAppName.c_str());
+        goto ON_tmain_ERROR;
+    }
+
+    if (pSolution1 && !pSolution1->FindPatchOffset()) {
+        PRINT_MESSAGE("MESSAGE: Cannot find RSA public key in libcc.dll. Solution1 will be omitted.");
+        pSolution1->SetFile(nullptr);
+        SAFE_DELETE(pSolution1);
+    }
+
+    if (pSolution2 && !pSolution2->FindPatchOffset()) {
+        PRINT_MESSAGE("MESSAGE: Cannot find RSA public key in libcc.dll. Solution2 will be omitted.");
+        pSolution2->SetFile(nullptr);
+        SAFE_DELETE(pSolution2);
+    }
+
+LoadingKey:
+    PRINT_MESSAGE("");
+    if (!LoadKey(cipher, argc == 3 ? argv[2] : nullptr, pSolution0, pSolution1, pSolution2))
+        goto ON_tmain_ERROR;
+
+BackupFiles:
+    PRINT_MESSAGE("");
+    ErrorCode = BackupFile(InstallationPath + MainAppName, InstallationPath + MainAppName + TEXT(".backup"));
+    if (ErrorCode == ERROR_SUCCESS) {
+        _tprintf_s(TEXT("MESSAGE: %s has been backed up successfully.\n"), MainAppName.c_str());
+    } else if (ErrorCode == ERROR_ACCESS_DENIED) {
+        _tprintf_s(TEXT("ERROR: Cannot back up %s for ERROR_ACCESS_DENIED.\n"), MainAppName.c_str());
+        _tprintf_s(TEXT("Please re-run with Administrator privilege.\n"));
+        goto ON_tmain_ERROR;
+    } else if (ErrorCode == ERROR_FILE_EXISTS) {
+        _tprintf_s(TEXT("ERROR: The backup of %s has been found.\n"), MainAppName.c_str());
+        _tprintf_s(TEXT("Please remove %s.backup in Navicat installation path if you're sure %s has not been patched.\n"), 
+                   MainAppName.c_str(), 
+                   MainAppName.c_str());
+        _tprintf_s(TEXT("Otherwise please restore %s by %s.backup and remove %s.backup then try again.\n"), 
+                   MainAppName.c_str(),
+                   MainAppName.c_str(), 
+                   MainAppName.c_str());
+        goto ON_tmain_ERROR;
+    } else {
+        _tprintf_s(TEXT("ERROR: Cannot back up %s. CODE: 0x%08X\n"),
+                   MainAppName.c_str(),
+                   ErrorCode);
+        goto ON_tmain_ERROR;
+    }
+
+    if (pSolution1 || pSolution2) {
+        ErrorCode = BackupFile(InstallationPath + LibccName, InstallationPath + LibccName + TEXT(".backup"));
+        if (ErrorCode == ERROR_SUCCESS) {
+            PRINT_MESSAGE("MESSAGE: libcc.dll has been backed up successfully.");
+        } else if (ErrorCode == ERROR_ACCESS_DENIED) {
+            PRINT_MESSAGE("ERROR: Cannot back up libcc.dll for ERROR_ACCESS_DENIED.");
+            PRINT_MESSAGE("Please re-run with Administrator privilege.");
+            goto ON_tmain_ERROR;
+        } else if (ErrorCode == ERROR_FILE_EXISTS) {
+            PRINT_MESSAGE("ERROR: The backup of libcc.dll has been found.");
+            PRINT_MESSAGE("Please remove libcc.dll.backup in Navicat installation path if you're sure libcc.dll has not been patched.");
+            PRINT_MESSAGE("Otherwise please restore libcc.dll by libcc.dll.backup and remove libcc.dll.backup then try again.");
+            goto ON_tmain_ERROR;
+        } else {
+            REPORT_ERROR_WITH_CODE("ERROR: Cannot back up libcc.dll.", ErrorCode);
+            goto ON_tmain_ERROR;
         }
     }
 
-    if (ReplaceNavicatPublicKey(hUpdater, pemPublicKey, strlen(pemPublicKey)) == FALSE) {
-        _tprintf_s(TEXT("Cannot replace public key. CODE: 0x%08x\r\n"), GetLastError());
-        EndUpdateResource(hUpdater, TRUE);
-        return GetLastError();
-    } else {
-        _tprintf_s(TEXT("Public key has been replaced.\r\n"));
-        EndUpdateResource(hUpdater, FALSE);
-    }
+MakingPatch:
+    PRINT_MESSAGE("");
+    if (!pSolution0->MakePatch(cipher))
+        goto ON_tmain_ERROR;
 
-    _tprintf_s(TEXT("Success!.\r\n"));
-    RSA_free(PrivateKey);
+    if (pSolution1 && !pSolution1->MakePatch(cipher))
+        goto ON_tmain_ERROR;
+
+    if (pSolution2 && !pSolution2->MakePatch(cipher))
+        goto ON_tmain_ERROR;
+
+    PRINT_MESSAGE("Solution0 has been done successfully.");
+    if (pSolution1)
+        PRINT_MESSAGE("Solution1 has been done successfully.");
+    if (pSolution2)
+        PRINT_MESSAGE("Solution2 has been done successfully.");
+
+ON_tmain_ERROR:
+    SAFE_DELETE(pSolution2);
+    SAFE_DELETE(pSolution1);
+    SAFE_DELETE(pSolution0);
+    SAFE_DELETE(pLibcc);
+    SAFE_DELETE(pMainApp);
+    SAFE_DELETE(cipher);
     return 0;
 }
+
