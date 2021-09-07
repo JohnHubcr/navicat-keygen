@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{6aa392e2-b540-4ab5-9bfd-40ad964b209a}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)TString.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Exception.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ExceptionSystem.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ResourceObject.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)RSACipher.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)TString.hpp" />
+  </ItemGroup>
+</Project>

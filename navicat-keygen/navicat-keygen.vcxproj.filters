@@ -15,8 +15,28 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Helper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="_tmain.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="ModeAdvance.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ModeNormal.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="NavicatKeygen.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="NavicatKeygen.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Helper.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
